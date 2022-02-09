@@ -31,5 +31,5 @@ spec:
                 - -L
                 - -X
                 - 'GET "{{- .Values.updateApiUrl -}}?hostname={{- .Values.hostname -}}&myip=$(curl {{ .Values.queryIpUrl -}})"'
-                - '-H "Authorization: Basic {{ cat .Values.username ":" .Values.password | b64enc }}"'
+                - '-H "Authorization: Basic {{ cat .Values.username ":" .Values.password | nospace | b64enc }}"'
           restartPolicy: {{ .Values.cronJob.restartPolicy }}

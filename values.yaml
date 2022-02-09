@@ -22,7 +22,7 @@ password: your-password-here
 
 cronJob:
   schedule: "0/5 * * * *"
-  restartPolicy: OnFailure
+  restartPolicy: Never
 
 jobAnnotations: {}
 
