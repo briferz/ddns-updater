@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "ddns-updater.fullname" . }}
+  labels:
+    {{- include "ddns-updater.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.cronJob.schedule }}
+  jobTemplate:
+    metadata:
+      {{- with .Values.jobAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ddns-updater.selectorLabels" . | nindent 8 }}
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .Chart.Name }}
+              env:
+                - name: PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "ddns-updater.fullname" . }}
+                      key: password
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 12 }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              args:
+                - -L
+                - -X
+                - 'GET "{{- .Values.updateApiUrl -}}?hostname={{- .Values.hostname -}}&myip=$(curl {{- .Values.queryIpUrl -}})"'
+                - '-H "Authorization: Basic {{ cat .Values.username ":" .Values.password | b64enc }} "'
+              resources:
+                {{- toYaml .Values.resources | nindent 12 }}
+          restartPolicy: {{ .Values.cronJob.restartPolicy }}
