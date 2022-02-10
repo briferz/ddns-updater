@@ -20,18 +20,21 @@ spec:
           containers:
             - name: {{ .Chart.Name }}
               env:
-                - name: PASSWORD
+                - name: DDNS_PASSWORD
                   valueFrom:
                     secretKeyRef:
                       name: {{ include "ddns-updater.fullname" . }}
                       key: password
+                - name: IP_QUERY_URL
+                  value: {{ .Values.queryIpUrl }}
+                - name: DDNS_API_URL
+                  value: {{ .Values.updateApiUrl }}
+                - name: DDNS_HOSTNAME
+                  value: {{ .Values.hostname }}
+                - name: DDNS_USERNAME
+                  value: {{ .Values.username }}
+                - name: DDNS_USER_AGENT
+                  value: {{ .Values.userAgent | quote }}
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
-              args:
-                - -L
-                - -X
-                - GET
-                - '"{{- .Values.updateApiUrl -}}?hostname={{- .Values.hostname -}}&myip=$(curl {{ .Values.queryIpUrl -}})"'
-                - -H
-                - '"Authorization: Basic {{ cat .Values.username ":" .Values.password | nospace | b64enc }}"'
           restartPolicy: {{ .Values.cronJob.restartPolicy }}

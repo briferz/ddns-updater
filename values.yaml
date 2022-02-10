@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: curlimages/curl
+  repository: brifer/ddns-updater
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -19,6 +19,7 @@ hostname: your-hostname-here
 queryIpUrl: ifconfig.me
 username: your-username-here
 password: your-password-here
+userAgent: LMBFER ddns-updater/Linux-v0.1.0 harmoniclighting@gmail.com
 
 cronJob:
   schedule: "0/5 * * * *"
