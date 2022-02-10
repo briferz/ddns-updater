@@ -16,7 +16,7 @@ fullnameOverride: ""
 
 updateApiUrl: https://dynupdate.no-ip.com/nic/update
 hostname: your-hostname-here
-queryIpUrl: ifconfig.me
+queryIpUrl: https://ifconfig.me
 username: your-username-here
 password: your-password-here
 userAgent: LMBFER ddns-updater/Linux-v0.1.0 harmoniclighting@gmail.com
